@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+
+import SearchModal from './serachModal';
 
 const HOME = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADKSURBVHgB7dTBDYJAEIXhN6vetQMSPSsVKFZgC5RgB9qBsQJL0A4wNiB3L3RgBTLuEEhIBHeFlRP/aWA3X+a0BMtm8+WOicIX0TqJr4npPsEiQUG0l5mBxAY3who9aHRb/meDf4Wni9VJXwirzkw4NUFt8A/Y84PxkPmsxwAW1eFUgUZ69PFDVTi1RetwlaPegPneFM03FCMSK/vO0UgO4KBic+USlYrNlUu0jCv8qR7u4Y7hC9wXZ6+bvBcjpBtOMUHLSOH5iG/HN07lYpib+pugAAAAAElFTkSuQmCC";
 const BOOKMARK = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAZCAYAAADTyxWqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD2SURBVHgB7ZWvC8JQFIWPP3AgDASbICwZBBE0mTSZ/HNNBrEtiMlm0qLJpMWB4D3sPBRRx+biDnwM9rbv3vfCfSU84xlNpM9FoKQXI6OH7NkaYfVFtDOOSJ+W/o8o6xgHY4VsYRM+hWXEZ3XDf+GZ1crIMYWskBWypHAqTPX8mWrC+lAwgbERqWQcKWN1c5SgJ3FgLKDpmiQLJOJoChFPUeb00ulMBXbfZPx5oA5YdW6c3wo5AWUTxHdG6BYrqhQZfaOtTpb4sA0lkrBudBFPat4lvpP5+nCt6nf8Dtf3KhgYDbdNjuwrvhxqQtghz3LmXnjIJ94DvdAwZI6SV38AAAAASUVORK5CYII=";
@@ -33,130 +35,168 @@ const furniture = [
 	{ id: 7, title: 'Myntra', img: MYNTRA },
 ];
 
-const App = () => {
-	return (
-		<View style={ styles.container }>
-			<ScrollView>
-			<View style={ styles.header }>
-				<View style={ styles.header__left }>
-					<Text style={ styles.header__text }>
-						Home
-					</Text>
-				</View>
-				<TouchableOpacity style={ styles.header__right }>
-					<Image source={{ uri: TAB }} style = {{height: 24, width: 24, resizeMode : 'contain',}} />
-					<Text style={ styles.tab__text }>
-						3
-					</Text>
-				</TouchableOpacity>
-			</View>
-			<View style={ styles.search }>
-				<TextInput
-					style={ styles.input }
-					placeholder="Search"
+const fur = [
+	{ id: 0, title: 'IKEA', img: IKEA },
+	{ id: 1, title: 'H & M', img: HM },
+	{ id: 2, title: 'Redbus', img: REDBUS },
+	{ id: 3, title: 'Amazon', img: AMAZON },
+];
+
+class App extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			modalVisible: false,
+			searchValue: ''
+		}
+	}
+
+	toggleModal = visible => {
+		this.setState({ modalVisible: visible });
+	};
+
+	handleChange = (value) => {
+		this.setState({ searchValue: value });
+	};
+
+	render(){
+		return (
+			<View style={ styles.container }>
+				<SearchModal
+					{ ...this.state }
+					toggleModal={ this.toggleModal }
+					handleChange={ this.handleChange }
 				/>
-				<View style={ styles.search__icon }>
-					<Image source={{ uri: SEARCH }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} />
+				<ScrollView>
+				<View style={ styles.header }>
+					<View style={ styles.header__left }>
+						<Text style={ styles.header__text }>
+							Home
+						</Text>
+					</View>
+					<TouchableOpacity style={ styles.header__right }>
+						<Image source={{ uri: TAB }} style = {{height: 24, width: 24, resizeMode : 'contain',}} />
+						<Text style={ styles.tab__text }>
+							3
+						</Text>
+					</TouchableOpacity>
 				</View>
-			</View>
-			<View style={ styles.deal }>
-				<View style={ styles.deal__header }>
-					<Text style={ styles.deal__header__text }>
-						Furniture
-					</Text>
+				<TouchableOpacity onPress={ () => this.toggleModal(true) } style={ styles.search }>
+					{/* <TextInput
+						style={ styles.input }
+						placeholder="Search"
+						onChangeText = { () => this.toggleModal(true) }
+					/> */}
+					<View style={ styles.search__wrapper }>
+						<View style={ styles.search__icon }>
+							<Image source={{ uri: SEARCH }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} />
+						</View>
+						<View style={ styles.search__text }>
+							<Text style={ styles.search__text__text }>
+								Search
+							</Text>
+						</View>
+					</View>
+				</TouchableOpacity>
+				<View style={ styles.deal }>
+					<View style={ styles.deal__header }>
+						<Text style={ styles.deal__header__text }>
+							Furniture
+						</Text>
+					</View>
+					<View style={ styles.row }>
+						{
+							furniture.map(deal => {
+								return (
+									<TouchableOpacity key={ deal.id } style={ styles.column }>
+										<View style={ styles.deal__icon }>
+											{/* Put Image path here */}
+											{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
+											<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
+										</View>
+										<View style={ styles.deal__title }>
+											<Text style={ styles.deal__text }>
+												{ deal.title }
+											</Text>
+										</View>
+									</TouchableOpacity>
+								);
+							})
+						}
+					</View>
 				</View>
-				<View style={ styles.row }>
+				<View style={ styles.deal }>
+					<View style={ styles.deal__header }>
+						<Text style={ styles.deal__header__text }>
+							Fashin
+						</Text>
+					</View>
+					<View style={ styles.row }>
+						{
+							fur.map(deal => {
+								return (
+									<TouchableOpacity key={ deal.id }  style={ styles.column }>
+										<View style={ styles.deal__icon }>
+												{/* Put Image path here */}
+												{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
+												<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
+											</View>
+											<View style={ styles.deal__title }>
+												<Text style={ styles.deal__text }>
+													{ deal.title }
+												</Text>
+											</View>
+									</TouchableOpacity>
+								);
+							})
+						}
+					</View>
+				</View>
+				<View style={ styles.deal }>
+					<View style={ styles.deal__header }>
+						<Text style={ styles.deal__header__text }>
+							Furniture
+						</Text>
+					</View>
+					<View style={ styles.row }>
+						{
+							furniture.map(deal => {
+								return (
+									<TouchableOpacity key={ deal.id } style={ styles.column }>
+										<View style={ styles.deal__icon }>
+											{/* Put Image path here */}
+											{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
+											<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
+										</View>
+										<View style={ styles.deal__title }>
+											<Text style={ styles.deal__text }>
+												{ deal.title }
+											</Text>
+										</View>
+									</TouchableOpacity>
+								);
+							})
+						}
+					</View>
+				</View>
+				</ScrollView>
+				<View style={ styles.bottomBar }>
 					{
-						furniture.map(deal => {
-							return(
-								<View key={ deal.id } style={ styles.column }>
-									<View style={ styles.deal__icon }>
-										{/* Put Image path here */}
-										{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
-										<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
-									</View>
-									<View style={ styles.deal__title }>
-										<Text style={ styles.deal__text }>
-											{ deal.title }
-										</Text>
-									</View>
+						bottomTabs.map(tab => {
+							return (
+								<View key={ tab.id } style={ styles.bottom__icon }>
+									<Image source={{ uri: tab.img }} style={{ width: 22, height: 22, resizeMode: 'contain' }}/>
+									<Text style={ styles.bottom__title }>
+										{ tab.title }
+									</Text>
 								</View>
 							);
 						})
 					}
 				</View>
 			</View>
-			<View style={ styles.deal }>
-				<View style={ styles.deal__header }>
-					<Text style={ styles.deal__header__text }>
-						Furniture
-					</Text>
-				</View>
-				<View style={ styles.row }>
-					{
-						furniture.map(deal => {
-							return(
-								<View key={ deal.id } style={ styles.column }>
-									<View style={ styles.deal__icon }>
-										{/* Put Image path here */}
-										{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
-										<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
-									</View>
-									<View style={ styles.deal__title }>
-										<Text style={ styles.deal__text }>
-											{ deal.title }
-										</Text>
-									</View>
-								</View>
-							);
-						})
-					}
-				</View>
-			</View>
-			<View style={ styles.deal }>
-				<View style={ styles.deal__header }>
-					<Text style={ styles.deal__header__text }>
-						Furniture
-					</Text>
-				</View>
-				<View style={ styles.row }>
-					{
-						furniture.map(deal => {
-							return(
-								<View key={ deal.id } style={ styles.column }>
-									<View style={ styles.deal__icon }>
-										{/* Put Image path here */}
-										{/* <Image source={{ uri: deal.img }} style = {{ height: '100%', width: '100%', resizeMode : 'contain' }} /> */}
-										<Image source={{ uri: deal.img }} style = {{ flex: 1, height: '100%', width: '100%', resizeMode : 'contain' }} />
-									</View>
-									<View style={ styles.deal__title }>
-										<Text style={ styles.deal__text }>
-											{ deal.title }
-										</Text>
-									</View>
-								</View>
-							);
-						})
-					}
-				</View>
-			</View>
-			</ScrollView>
-			<View style={ styles.bottomBar }>
-				{
-					bottomTabs.map(tab => {
-						return(
-							<View key={ tab.id } style={ styles.bottom__icon }>
-								<Image source={{ uri: tab.img }} style={{ width: 22, height: 22, resizeMode: 'contain' }}/>
-								<Text style={ styles.bottom__title }>
-									{ tab.title }
-								</Text>
-							</View>
-						);
-					})
-				}
-			</View>
-		</View>
-	);
+		);
+	}
 };
 
 const styles = StyleSheet.create({
@@ -214,23 +254,28 @@ const styles = StyleSheet.create({
 		marginBottom: 24,
 		position: 'relative'
 	},
-	input: {
+	search__wrapper: {
 		backgroundColor: '#F5F5F5',
+		width: '100%',
+		height: 50,
 		borderRadius: 16,
-		paddingLeft: 45,
-		fontSize: 16,
-		color: '#000'
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		paddingLeft: 24
 	},
 	search__icon: {
-		position: 'absolute', 
-		top: '40%', 
-		left: 40, 
-		right: 0, 
-		bottom: 0, 
-		justifyContent: 'center', 
-		alignItems: 'center',
 		width: 12,
-		height: 12
+		height: 12,
+	},
+	search__text: {
+		paddingLeft: 10,
+	},
+	search__text__text: {
+		fontSize: 16,
+		fontWeight: '500',
+		color: '#BABABA'
 	},
 	deal: {
 		backgroundColor: '#F9F9F9',
@@ -243,11 +288,11 @@ const styles = StyleSheet.create({
 		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
-			height: 2,
+			height: 1,
 		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5,
+		shadowOpacity: 0.20,
+		shadowRadius: 1.41,
+		elevation: 2,
 	},
 	deal__header: {
 		paddingBottom: 24
