@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 
 import SearchModal from './serachModal';
+import PopupModal from './popup';
 
 const HOME = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADKSURBVHgB7dTBDYJAEIXhN6vetQMSPSsVKFZgC5RgB9qBsQJL0A4wNiB3L3RgBTLuEEhIBHeFlRP/aWA3X+a0BMtm8+WOicIX0TqJr4npPsEiQUG0l5mBxAY3who9aHRb/meDf4Wni9VJXwirzkw4NUFt8A/Y84PxkPmsxwAW1eFUgUZ69PFDVTi1RetwlaPegPneFM03FCMSK/vO0UgO4KBic+USlYrNlUu0jCv8qR7u4Y7hC9wXZ6+bvBcjpBtOMUHLSOH5iG/HN07lYpib+pugAAAAAElFTkSuQmCC";
 const BOOKMARK = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAZCAYAAADTyxWqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAD2SURBVHgB7ZWvC8JQFIWPP3AgDASbICwZBBE0mTSZ/HNNBrEtiMlm0qLJpMWB4D3sPBRRx+biDnwM9rbv3vfCfSU84xlNpM9FoKQXI6OH7NkaYfVFtDOOSJ+W/o8o6xgHY4VsYRM+hWXEZ3XDf+GZ1crIMYWskBWypHAqTPX8mWrC+lAwgbERqWQcKWN1c5SgJ3FgLKDpmiQLJOJoChFPUeb00ulMBXbfZPx5oA5YdW6c3wo5AWUTxHdG6BYrqhQZfaOtTpb4sA0lkrBudBFPat4lvpP5+nCt6nf8Dtf3KhgYDbdNjuwrvhxqQtghz3LmXnjIJ94DvdAwZI6SV38AAAAASUVORK5CYII=";
@@ -47,12 +48,17 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			modalVisible: false,
-			searchValue: ''
+			searchValue: '',
+			popup: true
 		}
 	}
 
 	toggleModal = visible => {
 		this.setState({ modalVisible: visible });
+	};
+
+	popupShow = () => {
+		this.setState({ popup: !this.state.popup });
 	};
 
 	handleChange = (value) => {
@@ -66,6 +72,10 @@ class App extends React.Component {
 					{ ...this.state }
 					toggleModal={ this.toggleModal }
 					handleChange={ this.handleChange }
+				/>
+				<PopupModal
+					{ ...this.state }
+					popupShow={ this.popupShow }
 				/>
 				<ScrollView>
 				<View style={ styles.header }>
