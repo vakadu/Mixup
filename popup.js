@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Modal, View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
 
 const popupModal = props => {    
     return (
@@ -16,9 +16,10 @@ const popupModal = props => {
                     <View style={ styles.content }>
                         <Text style={ styles.content__header }>Coupons</Text>
                         <View style={ styles.content__wrapper }>
-                            <View style={ styles.content__top }>
+                            <TouchableOpacity onPress={ () => props.showToast() } style={ styles.content__top }>
                                 <Text style={ styles.content__top__text }>15% off INR 3000</Text>
-                            </View>
+                                <Text style={ styles.content__top__text__sub }>TAP TO COPY</Text>
+                            </TouchableOpacity>
                             <View style={ styles.content__bottom }>
                                 <Text style={ styles.content__bottom__text }>INDEPENDENCE</Text>
                                 <View style={ styles.content__bottom__image }>
@@ -129,11 +130,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor:'rgba(0, 0, 0, 0.8)',
         paddingTop: 124, 
+        paddingBottom: 40
     },
     modal__close: {
         position: 'absolute',
         top: 54,
-        left: '50%',
+        left: '45%', 
+        right: 0, 
+        bottom: 0, 
+        justifyContent: 'center', 
+        alignItems: 'center',
         width: 40,
         height: 40,
         backgroundColor: 'rgba(0, 0, 0, 0.16)',
@@ -201,6 +207,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
+    },
+    content__top__text__sub: {
+        fontSize: 11
     },
     content__bottom__text: {
         fontWeight: '600',

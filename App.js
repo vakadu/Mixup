@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ToastAndroid, Image, TouchableOpacity, ScrollView } from 'react-native';
 
 import SearchModal from './serachModal';
 import PopupModal from './popup';
@@ -65,6 +65,16 @@ class App extends React.Component {
 		this.setState({ searchValue: value });
 	};
 
+	showToast = () => {
+		ToastAndroid.showWithGravity(
+			"Text copied",
+			ToastAndroid.SHORT,
+			ToastAndroid.BOTTOM,
+			25,
+			50
+		);
+	};
+
 	render(){
 		return (
 			<View style={ styles.container }>
@@ -76,6 +86,7 @@ class App extends React.Component {
 				<PopupModal
 					{ ...this.state }
 					popupShow={ this.popupShow }
+					showToast={ this.showToast }
 				/>
 				<ScrollView>
 				<View style={ styles.header }>
